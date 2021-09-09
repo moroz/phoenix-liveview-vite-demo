@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import postcssUrl from "postcss-url";
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "http://localhost:3000/";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }: any) => {
@@ -15,7 +15,7 @@ export default defineConfig(({ command }: any) => {
   }
 
   return {
-    base: "http://localhost:3000",
+    base: BASE_URL,
     publicDir: "static",
     build: {
       target: "esnext",
