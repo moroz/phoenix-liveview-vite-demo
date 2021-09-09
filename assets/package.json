@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "deploy": "vite build"
+  },
   "devDependencies": {
     "@types/postcss-url": "^8.0.2",
     "postcss": "^8.3.6",
