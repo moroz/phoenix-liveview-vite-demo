@@ -1,9 +1,9 @@
 <h1 class="title">Listing Products</h1>
 
-<%= if @live_action in [:new, :edit] do %>
-  <%= live_modal TanokiWeb.ProductLive.FormComponent,
-    id: @product.id || :new,
-    title: @page_title,
+<div class={modal_class(@product)}></div>
+<%= if @live_action == :show do %>
+  <%= live_modal TanokiWeb.ProductLive.DetailedViewModal,
+    id: @product.id,
     action: @live_action,
     product: @product,
     return_to: Routes.product_index_path(@socket, :index) %>
@@ -16,8 +16,6 @@
       <th>Description</th>
       <th>Unit price</th>
       <th>Sku</th>
-
-      <th></th>
     </tr>
   </thead>
   <tbody id="products">
@@ -27,14 +25,7 @@
         <td><%= product.description %></td>
         <td><%= product.unit_price %></td>
         <td><%= product.sku %></td>
-
-        <td>
-          <span><%= live_patch "Edit", to: Routes.product_index_path(@socket, :edit, product) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: product.id, data: [confirm: "Are you sure?"] %></span>
-        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<span><%= live_patch "New Product", to: Routes.product_index_path(@socket, :new) %></span>

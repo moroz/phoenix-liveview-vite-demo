@@ -1,0 +1,25 @@
+modal,
+.modal-overlay
+  position: fixed
+  right: 0
+  top: 0
+  bottom: 0
+
+modal
+  width: $modal-width
+  padding: 1.5rem
+  box-shadow: 0 0 15px rgba(0,0,0,.15)
+  background: white
+  z-index: 10
+
+.modal-overlay
+  left: 0
+  background: transparentize(black, .8)
+  z-index: 8
+  transition: .2s ease-in-out
+  pointer-events: none
+
+  &:not(.is-shown)
+    background: transparent
+
+
