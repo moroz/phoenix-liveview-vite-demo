@@ -1,13 +1,21 @@
 defmodule TanokiWeb.ModalComponent do
   use TanokiWeb, :live_component
 
+  def modal_class(falsey) when falsey in [nil, false], do: "modal-overlay"
+  def modal_class(_), do: "modal-overlay is-shown"
+
+  def overlay(assigns) do
+    ~H"""
+    <%= live_patch("", to: @return_to, class: modal_class(@active)) %>
+    """
+  end
+
   @impl true
   def render(assigns) do
     ~H"""
     <modal
       id={@id}
       class="phx-modal"
-      phx-capture-click="close"
       phx-window-keydown="close"
       phx-key="escape"
       phx-target={@myself}
