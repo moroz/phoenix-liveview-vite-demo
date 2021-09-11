@@ -8,4 +8,7 @@ defmodule TanokiWeb.LayoutView do
   @dev Mix.env() == :dev
 
   def dev?, do: @dev
+
+  def flash_class("error"), do: "message is-danger"
+  def flash_class(other), do: "message is-#{other}"
 end
