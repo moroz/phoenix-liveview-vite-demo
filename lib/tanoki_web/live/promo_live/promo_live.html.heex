@@ -1,0 +1,26 @@
+<h1 class="title">Send Your Promo Code to a Friend</h1>
+<h2 class="subtitle">
+  Enter your friend's email below and we'll send them a promo code
+  for 10% off their first game purchase!
+</h2>
+
+<.form
+  let={f}
+  for={@changeset}
+  phx-change="validate"
+  phx-submit="save">
+
+  <div class="field">
+    <%= label f, :first_name, class: "label" %>
+    <%= text_input f, :first_name, class: "input", autofocus: true %>
+    <%= error_tag f, :first_name %>
+  </div>
+
+  <div class="field">
+    <%= label f, :email, class: "label" %>
+    <%= text_input f, :email, class: "input" %>
+    <%= error_tag f, :email %>
+  </div>
+
+  <%= submit "Send Promo", class: "button is-success" %>
+</.form>

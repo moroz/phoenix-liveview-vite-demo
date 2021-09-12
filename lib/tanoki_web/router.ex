@@ -81,6 +81,7 @@ defmodule TanokiWeb.Router do
 
     live "/products", ProductLive.Index, :index
     live "/products/:id", ProductLive.Index, :show
+    live "/promo", PromoLive
   end
 
   scope "/", TanokiWeb do
