@@ -18,9 +18,9 @@
 
   <div class="field">
     <%= label f, :email, class: "label" %>
-    <%= text_input f, :email, class: "input" %>
+    <%= text_input f, :email, class: "input", phx_debounce: "blur" %>
     <%= error_tag f, :email %>
   </div>
 
-  <%= submit "Send Promo", class: "button is-success" %>
+  <%= submit "Send Promo", class: "button is-success", phx_disable_with: "Sending promo..." %>
 </.form>

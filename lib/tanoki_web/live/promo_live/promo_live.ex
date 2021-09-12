@@ -32,4 +32,9 @@ defmodule TanokiWeb.PromoLive do
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
+
+  def handle_event("save", %{"recipient" => _recipient_params}, socket) do
+    :timer.sleep(1000)
+    {:noreply, socket}
+  end
 end
