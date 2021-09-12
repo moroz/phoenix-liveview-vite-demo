@@ -6,7 +6,7 @@ defmodule TanokiWeb.ModalComponent do
 
   def overlay(assigns) do
     ~H"""
-    <%= live_patch("", to: @return_to, class: modal_class(@active)) %>
+    <div class={modal_class(@active)} phx-click="close" phx-target="modal"></div>
     """
   end
 

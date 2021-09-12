@@ -1,15 +1,5 @@
 <h1 class="title">Listing Products</h1>
 
-<% return_to = Routes.product_index_path(@socket, :index) %>
-<TanokiWeb.ModalComponent.overlay active={@product} return_to={return_to} />
-<%= if @live_action == :show do %>
-  <%= live_modal TanokiWeb.ProductLive.DetailedViewModal,
-    id: @product.id,
-    action: @live_action,
-    product: @product,
-    return_to: return_to %>
-<% end %>
-
 <table class="table is-bordered is-fullwidth is-hoverable clickable-table">
   <thead>
     <tr>
@@ -30,3 +20,12 @@
     <% end %>
   </tbody>
 </table>
+
+<TanokiWeb.ModalComponent.overlay active={@product} />
+<%= if @product do %>
+  <%= live_modal TanokiWeb.ProductLive.DetailedViewModal,
+    id: @product.id,
+    product: @product,
+    return_to: Routes.product_index_path(@socket, :index) %>
+<% end %>
+
