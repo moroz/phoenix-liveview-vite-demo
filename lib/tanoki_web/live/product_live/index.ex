@@ -33,7 +33,4 @@ defmodule TanokiWeb.ProductLive.Index do
   defp list_products do
     Catalog.list_products()
   end
-
-  def modal_class(nil), do: "modal-overlay"
-  def modal_class(_), do: "modal-overlay is-shown"
 end
