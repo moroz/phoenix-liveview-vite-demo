@@ -3,9 +3,14 @@ defmodule Tanoki.Autologout.Worker do
 
   import Logger
   alias Tanoki.Autologout.WorkerRegistry
+  alias Tanoki.Accounts
 
   defmodule State do
-    defstruct started_at: nil, last_heartbeat_at: nil, channel_id: nil, timeout_time: nil
+    defstruct started_at: nil,
+              last_heartbeat_at: nil,
+              channel_id: nil,
+              timeout_time: nil,
+              user_token: nil
 
     def new(attrs \\ []) do
       __MODULE__
@@ -21,7 +26,7 @@ defmodule Tanoki.Autologout.Worker do
     defp default_timeout do
       :tanoki
       |> Application.get_env(Tanoki.Autologout, [])
-      |> Keyword.get(:timeout_time, 15 * 60 * 1000)
+      |> Keyword.get(:timeout_time, 15000)
     end
 
     defp now, do: :os.system_time(:seconds)
@@ -34,10 +39,10 @@ defmodule Tanoki.Autologout.Worker do
   end
 
   def ping(channel_id) do
-    with pid when is_pid(pid) <- WorkerRegistry.lookup_by_channel_id(channel_id),
-         true <- Process.alive?(pid) do
-      :gen_statem.call(pid, :ping)
-    else
+    case WorkerRegistry.lookup_by_channel_id(channel_id) do
+      pid when is_pid(pid) ->
+        :gen_statem.call(pid, :ping)
+
       _ ->
         {:error, :dead}
     end
@@ -56,18 +61,21 @@ defmodule Tanoki.Autologout.Worker do
   end
 
   def alive(:timeout, _event, state) do
+    debug("Time out")
     {:next_state, :dead, state}
   end
 
   def alive({:call, from}, :ping, state) do
-    debug("Received a :ping from channel #{state.channel_id}")
+    debug("Received a :ping from channel #{state.channel_id}, timeout #{state.timeout_time}")
 
     {:keep_state, State.refesh(state),
      [timeout(state), {:reply, from, {:pong, state.timeout_time}}]}
   end
 
-  def dead(:enter, _prev_state, %{channel_id: channel_id}) do
+  def dead(:enter, _prev_state, %State{channel_id: channel_id, user_token: token}) do
     debug("Kicking out everyone in channel #{inspect(channel_id)}")
+    Accounts.delete_session_token(token)
+    TanokiWeb.Endpoint.broadcast!("activity:#{channel_id}", "logout", %{})
     {:stop, :normal}
   end
 end

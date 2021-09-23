@@ -14,7 +14,7 @@ defmodule TanokiWeb.ActivitySocket do
 
       %User{} = user ->
         channel_id = channel_id_from_user_token(token)
-        {:ok, _pid} = WorkerSupervisor.find_or_start_worker(channel_id)
+        {:ok, _pid} = WorkerSupervisor.find_or_start_worker(channel_id, user_token: token)
 
         {:ok,
          socket

@@ -17,12 +17,6 @@ defmodule TanokiWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", TanokiWeb do
-    pipe_through :browser
-
-    get "/", PageController, :index
-  end
-
   # Other scopes may use custom stacks.
   # scope "/api", TanokiWeb do
   #   pipe_through :api
@@ -74,6 +68,7 @@ defmodule TanokiWeb.Router do
   scope "/", TanokiWeb do
     pipe_through [:browser, :require_authenticated_user]
 
+    get "/", PageController, :index
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email

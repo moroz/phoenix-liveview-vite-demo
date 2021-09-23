@@ -7,6 +7,7 @@ import "phoenix_html";
 // Establish Phoenix Socket and LiveView configuration.
 import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
+import ActivityTracker from "./ActivityTracker";
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
@@ -18,16 +19,4 @@ let liveSocket = new LiveSocket("/live", Socket, {
 
 liveSocket.connect();
 
-const activitySocket = new Socket("/activity", {
-  params: { _csrf_token: csrfToken }
-});
-
-// connect if there are any LiveViews on the page
-activitySocket.connect();
-
-const channel = activitySocket.channel("activity:test");
-channel.join();
-
-setInterval(() => {
-  channel.push("ping", {});
-}, 3000);
+new ActivityTracker();

@@ -18,7 +18,7 @@ defmodule TanokiWeb.ActivityChannel do
     end
   end
 
-  def handle_info(:timeout, socket) do
+  def handle_info(%{event: "logout"}, socket) do
     kick_out(socket)
   end
 
