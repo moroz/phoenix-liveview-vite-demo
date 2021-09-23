@@ -23,7 +23,7 @@ defmodule Tanoki.Autologout.WorkerSupervisor do
     child_spec = %{
       id: Worker,
       start: {Worker, :start_link, [name, [channel_id: channel_id] ++ attrs]},
-      restart: :transient
+      restart: :temporary
     }
 
     DynamicSupervisor.start_child(__MODULE__, child_spec)
