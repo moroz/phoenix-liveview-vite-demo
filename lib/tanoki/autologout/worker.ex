@@ -5,7 +5,7 @@ defmodule Tanoki.Autologout.Worker do
   alias Tanoki.Autologout.WorkerRegistry
 
   defmodule State do
-    defstruct started_at: nil, last_heartbeat_at: nil, channel: nil, timeout_time: nil
+    defstruct started_at: nil, last_heartbeat_at: nil, channel_id: nil, timeout_time: nil
 
     def new(attrs \\ []) do
       __MODULE__
@@ -33,17 +33,14 @@ defmodule Tanoki.Autologout.Worker do
     :gen_statem.start_link(name, __MODULE__, init_arg, [])
   end
 
-  def ping({:via, _, _} = via_tuple) do
-    :gen_statem.call(via_tuple, :ping)
-  end
-
-  def ping(pid) when is_pid(pid) do
-    :gen_statem.call(pid, :ping)
-  end
-
-  def ping(channel_id) when is_binary(channel_id) do
-    via_tuple = WorkerRegistry.via_tuple(channel_id)
-    ping(via_tuple)
+  def ping(channel_id) do
+    with pid when is_pid(pid) <- WorkerRegistry.lookup_by_channel_id(channel_id),
+         true <- Process.alive?(pid) do
+      :gen_statem.call(pid, :ping)
+    else
+      _ ->
+        {:error, :dead}
+    end
   end
 
   def init(opts \\ []) do
@@ -55,7 +52,6 @@ defmodule Tanoki.Autologout.Worker do
   end
 
   def alive(:enter, _old_state, state) do
-    debug("Entering alive")
     {:keep_state, state, [timeout(state)]}
   end
 
@@ -64,12 +60,14 @@ defmodule Tanoki.Autologout.Worker do
   end
 
   def alive({:call, from}, :ping, state) do
+    debug("Received a :ping from channel #{state.channel_id}")
+
     {:keep_state, State.refesh(state),
      [timeout(state), {:reply, from, {:pong, state.timeout_time}}]}
   end
 
-  def dead(:enter, _prev_state, %{channel: channel}) do
-    debug("Kicking out everyone in channel #{inspect(channel)}")
+  def dead(:enter, _prev_state, %{channel_id: channel_id}) do
+    debug("Kicking out everyone in channel #{inspect(channel_id)}")
     {:stop, :normal}
   end
 end

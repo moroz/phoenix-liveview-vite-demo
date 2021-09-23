@@ -11,6 +11,9 @@
 # and so on) as they will fail if something goes wrong.
 
 alias Tanoki.Catalog
+alias Tanoki.Accounts
+
+Accounts.register_user(%{email: "user@example.com", password: "7Sd^E&36d51a"})
 
 products = [
   %{
