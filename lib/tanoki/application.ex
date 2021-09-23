@@ -15,9 +15,9 @@ defmodule Tanoki.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Tanoki.PubSub},
       # Start the Endpoint (http/https)
-      TanokiWeb.Endpoint
+      TanokiWeb.Endpoint,
       # Start a worker by calling: Tanoki.Worker.start_link(arg)
-      # {Tanoki.Worker, arg}
+      Tanoki.Autologout.Supervisor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

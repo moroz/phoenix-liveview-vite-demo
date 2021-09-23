@@ -6,4 +6,6 @@ alias Tanoki.Accounts.User
 alias Tanoki.Promo
 alias Tanoki.Promo.Recipient
 alias Tanoki.Autologout.Supervisor
+alias Tanoki.Autologout.WorkerRegistry
+alias Tanoki.Autologout.WorkerSupervisor
 alias Tanoki.Autologout.Worker
